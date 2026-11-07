@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ==============================
+   TOKENS
+============================== */
+
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --accent: #60a5fa; /* texto/íconos destacados */
+  --glow: rgba(59, 130, 246, 0.25);
+
+  --bg: #080d18;
+  --bg-alt: #0d1525;
+  --bg-card: #111c30;
+  --nav-bg: rgba(8, 13, 24, 0.85);
+
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --border: rgba(96, 165, 250, 0.15);
+  --shadow: 0 0 25px rgba(59, 130, 246, 0.12);
+
+  --radius: 12px;
+  --ease: 0.3s ease;
+  --max-width: 1400px;
+  --gutter: 8%;
+  --section-y: 100px;
+}
+
+:root[data-mode='light'] {
+  --primary-hover: #2563eb;
+  --accent: #2563eb;
+
+  --bg: #f8fafc;
+  --bg-alt: #eef2f7;
+  --bg-card: #ffffff;
+  --nav-bg: rgba(248, 250, 252, 0.85);
+
+  --text: #0f172a;
+  --muted: #475569;
+  --border: rgba(59, 130, 246, 0.2);
+  --shadow: 0 5px 25px rgba(37, 99, 235, 0.08);
+}
+
+@media (max-width: 600px) {
+  :root {
+    --gutter: 6%;
+    --section-y: 75px;
+  }
+}
+
+/* Permite animar el ángulo del borde giratorio */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ==============================
+   RESET
+============================== */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  transition: background-color var(--ease), color var(--ease);
+}
+
+h1, h2, h3, h4 { line-height: 1.2; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+svg { flex-shrink: 0; }
+
+button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--primary); color: #fff; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+/* ==============================
+   SECCIONES
+============================== */
+
+/* :where() = especificidad 0, así .home puede cambiar el padding sin pelear */
+:where(.section) {
+  padding: var(--section-y) var(--gutter);
+}
+
+:is(.home-container, .about-container, .skills-container, .experience-container,
+    .projects-container, .education-container, .contact-container) {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.about,
+.experience,
+.education {
+  background: var(--bg-alt);
+}
+
+.section-heading {
+  max-width: 700px;
+  margin: 0 auto 60px;
+  text-align: center;
+}
+
+.section-subtitle {
+  display: inline-block;
+  margin-bottom: 15px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.section-title {
+  margin-bottom: 15px;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+}
+
+/* Barra bajo el título: crece cuando la sección aparece */
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 15px auto 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.section-heading.is-visible .section-title::after {
+  animation: grow 0.8s 0.3s ease backwards;
+}
+
+/* ==============================
+   BOTONES
+============================== */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: var(--ease);
+}
+
+.btn:hover { transform: translateY(-3px); }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 20px var(--glow);
+}
+
+.btn-primary:hover { background: var(--primary-hover); }
+
+/* Brillo que cruza el botón al pasar el mouse */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+
+.btn-primary:hover::after {
+  transform: translateX(120%);
+  transition: transform 0.7s ease;
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--accent);
+}
+
+/* ==============================
+   PATRONES COMPARTIDOS
+============================== */
+
+/* Texto secundario */
+:is(.section-description, .home-description, .home-visual-text, .about-description,
+    .about-card-description, .experience-description, .project-description,
+    .education-description, .contact-description, .contact-action-description) {
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* Texto/íconos de acento */
+:is(.section-subtitle, .home-greeting, .home-subtitle, .home-visual-label,
+    .home-visual-symbol, .about-card-icon, .education-group-heading, .experience-company,
+    .project-icon, .project-category, .project-link, .education-card-icon,
+    .education-institution, .diploma-icon, .diploma-institution,
+    .contact-email, .contact-action-icon) {
+  color: var(--accent);
+}
+
+/* Tarjetas */
+:is(.about-card, .tech-item, .experience-card, .project-card,
+    .education-card, .diploma-card, .contact-info, .contact-action) {
+  position: relative;
+  padding: var(--pad, 25px);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+/* Tarjetas interactivas: borde + foco de luz que sigue al mouse (useScrollEffects) */
+:is(.about-card, .tech-item, .experience-card, .project-card,
+    .education-card, .diploma-card):hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+
+:is(.about-card, .experience-card, .project-card,
+    .education-card, .diploma-card)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+              rgba(59, 130, 246, 0.14), transparent 70%);
+  transition: opacity var(--ease);
+}
+
+:is(.about-card, .experience-card, .project-card,
+    .education-card, .diploma-card):hover::before {
+  opacity: 1;
+}
+
+/* Etiquetas */
+.project-tech-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent);
+  font-size: 0.8rem;
+  transition: var(--ease);
+}
+
+.project-tech-tag:hover {
+  transform: translateY(-3px);
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* Botones circulares de redes */
+:is(.home-social-link, .contact-social-link, .footer-social-link) {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--accent);
+  transition: var(--ease);
+}
+
+:is(.home-social-link, .contact-social-link, .footer-social-link):hover {
+  transform: translateY(-4px);
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 20px var(--glow);
+}
+
+/* ==============================
+   ANIMACIONES
+============================== */
+
+/* Aparición al hacer scroll (las clases las agrega useScrollEffects) */
+.reveal:not(.is-visible) { opacity: 0; }
+
+.reveal.is-visible {
+  animation: fadeUp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
+@keyframes shimmer {
+  from { background-position: 120% 0; }
+  to   { background-position: -120% 0; }
+}
+
+@keyframes spin { to { --angle: 360deg; } }
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(40px, -30px) scale(1.15); }
+}
+
+@keyframes grow { from { width: 0; } }
+
+@keyframes progress { to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .navbar::after { display: none; }
+}
