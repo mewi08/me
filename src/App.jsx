@@ -1,3 +1,5 @@
+import './styles/App.css'
+
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
@@ -6,26 +8,28 @@ import About from './sections/About'
 import Skills from './sections/Skills'
 import Experience from './sections/Experience'
 import Projects from './sections/Projects'
-import Education from './sections/Education'
 import Contact from './sections/Contact'
 
+import useScrollEffects from './hooks/useScrollEffects'
+
 function App() {
+  useScrollEffects()
+
   return (
-    <>
+    <div className="app">
       <Navbar />
 
-      <main>
+      <main className="main">
         <Home />
         <About />
         <Skills />
         <Experience />
         <Projects />
-        <Education />
         <Contact />
       </main>
 
       <Footer />
-    </>
+    </div>
   )
 }
 
